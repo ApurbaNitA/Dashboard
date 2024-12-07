@@ -214,16 +214,16 @@ const Dashboard = () => {
       article.payoutRate.toFixed(2),
       `$${article.payoutRate.toFixed(2)}`,
     ]);
-  
+
     const headers = ["Author", "Article Title", "Payout Rate", "Calculated Payout"];
     const body = {
       values: [headers, ...sheetData],
     };
-  
+
     const apiKey = "AIzaSyAtNkfzZUwjO1utW0L2twT7zY_N-8T7DfI"; // Replace with your API key
     const spreadsheetId = "1ScLBg-8lIgWl-7Xex66gY3MwN2wpKIQlL8wRBb7b0pY"; // Replace with your spreadsheet ID
     const range = "Sheet1!A1"; // Replace with your desired range
-  
+
     try {
       const response = await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED&key=${apiKey}`,
@@ -233,7 +233,7 @@ const Dashboard = () => {
           body: JSON.stringify(body),
         }
       );
-  
+
       if (response.ok) {
         alert("Data exported to Google Sheets successfully!");
       } else {
@@ -244,7 +244,7 @@ const Dashboard = () => {
       console.error("Error:", error);
     }
   };
-  
+
 
   if (status === 'loading') {
     return <div className="text-center text-blue-500">Loading...</div>;
@@ -268,24 +268,24 @@ const Dashboard = () => {
       <div className="flex flex-col lg:flex-row gap-4 my-4">
         <div className="lg:w-1/2 bg-white shadow p-4 rounded">
 
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Payout Details</h2>
-            <div className="flex gap-2">
+          <div className="flex justify-between items-center mb-4 flex-col sm:flex-row">
+            <h2 className="text-xl font-bold mb-4 sm:mb-0">Payout Details</h2>
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
               <button
                 onClick={exportToPDF}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full sm:w-auto"
               >
                 Export to PDF
               </button>
               <button
                 onClick={exportToCSV}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full sm:w-auto"
               >
                 Export to CSV
               </button>
               <button
                 onClick={exportToGoogleSheets}
-                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 w-full sm:w-auto"
               >
                 Export to Google Sheets
               </button>
@@ -327,6 +327,7 @@ const Dashboard = () => {
             Total Payout: ${totalPayout.toFixed(2)}
           </div>
         </div>
+
 
         <div className="lg:w-1/2 bg-white shadow p-4 rounded">
           <h2 className="text-xl font-bold mb-4">Articles by Author</h2>
