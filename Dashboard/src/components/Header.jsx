@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../FirebaseConfig";
+import { auth } from "../firebaseConfig";
 
 const Header = () => {
   const user = useSelector((state) => state.auth.user);
