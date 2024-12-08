@@ -61,15 +61,15 @@ const App = () => {
               }
             />
 
-            {/* Admin-only routes (if you add any in the future) */}
-            <Route
+           
+            {/* <Route
               path="/admin"
               element={
                 <AdminRoute>
                   <div>Admin Panel Placeholder</div>
                 </AdminRoute>
               }
-            />
+            /> */}
 
             {/* Redirect unknown routes to login */}
             <Route path="*" element={<Navigate to="/auth" replace />} />
