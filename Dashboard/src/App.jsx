@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Authentication from "./components/Authentication";
@@ -29,9 +29,20 @@ const AdminRoute = ({ children }) => {
 };
 
 const App = () => {
+  const darkMode = useSelector((state) => state.theme.darkMode);
+
+  // Sync dark mode with the root HTML element
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
         {/* Show header only if the user is logged in */}
         <Header />
         <div className="p-4">

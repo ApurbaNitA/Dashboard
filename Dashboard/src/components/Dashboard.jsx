@@ -10,7 +10,7 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { unparse } from "papaparse";
-
+import * as XLSX from "xlsx";
 // Register chart components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -30,6 +30,7 @@ const Dashboard = () => {
 
   const auth = getAuth();
   const db = getFirestore();
+  const darkMode = useSelector((state) => state.theme.darkMode);
 
   useEffect(() => {
     // Fetch news
@@ -148,8 +149,12 @@ const Dashboard = () => {
       {
         label: "Articles by Author",
         data: Object.values(articleCountByAuthor),
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: darkMode
+          ? "rgba(255, 255, 255, 0.8)"
+          : "rgba(75, 192, 192, 0.2)",
+        borderColor: darkMode
+          ? "rgba(255, 255, 255, 1)"
+          : "rgba(75, 192, 192, 1)",
         borderWidth: 1,
       },
     ],
@@ -208,41 +213,22 @@ const Dashboard = () => {
   };
 
   const exportToGoogleSheets = async () => {
-    const sheetData = filteredData.map((article) => [
-      article.author || "Unknown",
-      article.title,
-      article.payoutRate.toFixed(2),
-      `$${article.payoutRate.toFixed(2)}`,
-    ]);
-
-    const headers = ["Author", "Article Title", "Payout Rate", "Calculated Payout"];
-    const body = {
-      values: [headers, ...sheetData],
-    };
-
-    const apiKey = "AIzaSyAtNkfzZUwjO1utW0L2twT7zY_N-8T7DfI"; // Replace with your API key
-    const spreadsheetId = "1ScLBg-8lIgWl-7Xex66gY3MwN2wpKIQlL8wRBb7b0pY"; // Replace with your spreadsheet ID
-    const range = "Sheet1!A1"; // Replace with your desired range
-
-    try {
-      const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED&key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
-
-      if (response.ok) {
-        alert("Data exported to Google Sheets successfully!");
-      } else {
-        const errorData = await response.json();
-        console.error("Error exporting to Google Sheets:", errorData);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    const sheetData = filteredData.map((article) => ({
+      Author: article.author || "Unknown",
+      "Article Title": article.title,
+      "Payout Rate": article.payoutRate.toFixed(2),
+      "Calculated Payout": `$${article.payoutRate.toFixed(2)}`,
+    }));
+  
+    // Create a worksheet from the data
+    const worksheet = XLSX.utils.json_to_sheet(sheetData);
+  
+    // Create a workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Payout Report");
+  
+    // Write the workbook and trigger a download
+    XLSX.writeFile(workbook, "Payout_Report.xlsx");
   };
 
 
@@ -259,14 +245,14 @@ const Dashboard = () => {
   }
   return (
     <div className="p-4">
-      <div className="mb-4 my-4">
+      <div className="mb-4 my-4  dark:bg-gray-900 dark:text-white">
         <h2 className="text-2xl font-bold">Total Articles: {filteredData.length}</h2>
       </div>
 
       <SearchFilter filters={filters} setFilters={setFilters} uniqueAuthors={uniqueAuthors} />
 
       <div className="flex flex-col lg:flex-row gap-4 my-4">
-        <div className="lg:w-1/2 bg-white shadow p-4 rounded">
+        <div className="lg:w-1/2 bg-white shadow p-4 rounded dark:bg-gray-800 dark:text-white">
 
           <div className="flex justify-between items-center mb-4 flex-col sm:flex-row">
             <h2 className="text-xl font-bold mb-4 sm:mb-0">Payout Details</h2>
@@ -294,7 +280,7 @@ const Dashboard = () => {
 
           <div className="max-h-96 overflow-y-auto border rounded">
             <table className="table-auto w-full text-left">
-              <thead className="bg-gray-200">
+              <thead className="bg-gray-200 dark:bg-gray-600">
                 <tr>
                   <th className="px-4 py-2 border">Author</th>
                   <th className="px-4 py-2 border">Article Title</th>
@@ -312,7 +298,7 @@ const Dashboard = () => {
                         type="number"
                         value={article.payoutRate}
                         onChange={(e) => handlePayoutRateChange(e, article.url)}
-                        className="border p-1 w-full"
+                        className="border p-1 w-full  dark:bg-gray-800 dark:text-white"
                         min="0"
                         disabled={!isAdmin} // Disable input if not admin
                       />
@@ -329,7 +315,7 @@ const Dashboard = () => {
         </div>
 
 
-        <div className="lg:w-1/2 bg-white shadow p-4 rounded">
+        <div className="lg:w-1/2 bg-white shadow p-4 rounded  dark:bg-gray-800 dark:text-white">
           <h2 className="text-xl font-bold mb-4">Articles by Author</h2>
           <Bar data={chartData} />
         </div>

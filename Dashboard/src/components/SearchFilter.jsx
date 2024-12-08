@@ -11,7 +11,7 @@ const SearchFilter = ({ filters, setFilters, uniqueAuthors }) => {
           placeholder="Search"
           value={filters.keyword}
           onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
-          className="w-full border p-2 rounded pl-10"
+          className="w-full border p-2 rounded pl-10  dark:bg-gray-800 dark:text-white"
         />
         <FiSearch className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" />
       </div>
@@ -21,7 +21,7 @@ const SearchFilter = ({ filters, setFilters, uniqueAuthors }) => {
         <select
           value={filters.author}
           onChange={(e) => setFilters({ ...filters, author: e.target.value })}
-          className="border p-2 rounded w-full lg:w-1/4 max-h-32 overflow-y-auto"
+          className="border p-2 rounded w-full lg:w-1/4 max-h-32 overflow-y-auto  dark:bg-gray-800 dark:text-white"
         >
           <option value="">All Authors</option>
           {uniqueAuthors.map((author, index) => (
@@ -34,13 +34,13 @@ const SearchFilter = ({ filters, setFilters, uniqueAuthors }) => {
           type="date"
           value={filters.startDate}
           onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-          className="border p-2 rounded w-full lg:w-1/4"
+          className="border p-2 rounded w-full lg:w-1/4  dark:bg-gray-800 dark:text-white"
         />
         <input
           type="date"
           value={filters.endDate}
           onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-          className="border p-2 rounded w-full lg:w-1/4"
+          className="border p-2 rounded w-full lg:w-1/4  dark:bg-gray-800 dark:text-white"
         />
         {/* <input
           type="text"

@@ -35,10 +35,10 @@ const Authentication = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100  dark:bg-gray-900 dark:text-white">
       <form
         onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow-md w-full max-w-md"
+        className="bg-white p-6 rounded shadow-md w-full max-w-md  dark:bg-gray-800 dark:text-white"
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
